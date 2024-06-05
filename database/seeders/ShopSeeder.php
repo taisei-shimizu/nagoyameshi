@@ -19,7 +19,7 @@ class ShopSeeder extends Seeder
             [
                 'name' => '名古屋味噌カツ店',
                 'description' => '最高の味噌カツを提供します。',
-                'image' => 'images/miso_katsu.jpg',
+                'image' => 'images/miso-katsu.jpg',
                 'category_id' => 1,
                 'budget_lower' => 1000,
                 'budget_upper' => 3000,
