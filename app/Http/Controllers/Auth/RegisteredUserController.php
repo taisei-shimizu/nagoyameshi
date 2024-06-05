@@ -40,12 +40,14 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'member', // デフォルト値を設定
+            'member_type' => 'free', // デフォルト値を設定
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect('/verify-email');
     }
 }
