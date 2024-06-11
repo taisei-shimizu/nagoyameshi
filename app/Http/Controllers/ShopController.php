@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shop;
+use App\Models\Category;
+use App\Helpers\TimeSlotHelper;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -12,10 +14,34 @@ class ShopController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $shops = Shop::paginate(15);
-        return view('shops.index', compact('shops'));
+        $query = Shop::query();
+        // 店名での検索
+        if ($request->filled('name')) {
+            $query->where('name', 'like', '%' . $request->input('name') . '%');
+        }
+
+        // カテゴリでの検索
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+
+        // 価格順での並び替え
+        if ($request->filled('sort')) {
+            if ($request->input('sort') == 'price_asc') {
+                $query->orderBy('budget_lower', 'asc');
+            } elseif ($request->input('sort') == 'price_desc') {
+                $query->orderBy('budget_lower', 'desc');
+            }
+        }
+        $shops = $query->paginate(15);
+        $categories = Category::all();
+        $breadcrumbs = [
+            ['url' => route('shops.index'), 'label' => '名古屋飯店一覧'],
+        ];
+
+        return view('shops.index', compact('shops', 'categories', 'breadcrumbs'));
     }
 
     /**
@@ -47,7 +73,15 @@ class ShopController extends Controller
      */
     public function show(Shop $shop)
     {
-        //
+        $breadcrumbs = [
+            ['url' => route('shops.index'), 'label' => '名古屋飯店一覧'],
+            ['url' => route('shops.show', $shop->id), 'label' => $shop->name],
+        ];
+        $reviews = $shop->reviews;
+        $timeSlots = TimeSlotHelper::getTimeSlots($shop);
+        // 平均評価を計算
+        $averageRating = $shop->reviews()->avg('score');
+        return view('shops.show', compact('shop', 'breadcrumbs', 'reviews', 'timeSlots', 'averageRating'));
     }
 
     /**

@@ -1,7 +1,11 @@
 <header class="bg-dark text-white p-3">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
-            <h1><a href="{{ url('/') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
+            @guest
+                <h1><a href="{{ url('/') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
+            @else
+                <h1><a href="{{ url('/shops') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
+            @endguest
             <nav>
                 @guest
                     <a href="{{ route('register') }}" class="btn btn-primary">新規登録</a>
@@ -10,6 +14,7 @@
                         <a href="{{ route('company') }}" class="btn btn-primary">運営会社情報</a>
                     @endif
                 @else
+                    <a href="{{ route('mypage') }}" class="btn btn-primary">マイページ</a>
                     <a href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                         class="btn btn-primary">ログアウト</a>
