@@ -61,6 +61,20 @@
                             <h5 class="card-title">{{ $shop->name }}</h5>
                             <p class="card-text">{{ $shop->description }}</p>
                             <p class="card-text"><strong>予算:</strong> {{ $shop->budget_lower }} - {{ $shop->budget_upper }} 円</p>
+                            <p class="card-text">評価: 
+                                @if ($shop->average_rating)
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $shop->average_rating)
+                                            <i class="fas fa-star text-warning"></i>
+                                        @else
+                                            <i class="far fa-star text-warning"></i>
+                                        @endif
+                                    @endfor
+                                    ({{ number_format($shop->average_rating, 1) }})
+                                @else
+                                    まだ評価はありません
+                                @endif
+                            </p>
                             @auth
                                 @if (Auth::user()->member_type === 'paid')
                                     @if (Auth::user()->favorites->contains('shop_id', $shop->id))

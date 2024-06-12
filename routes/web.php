@@ -9,6 +9,9 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\ReviewManagementController;
+use App\Http\Controllers\AdminManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,9 +60,13 @@ Route::middleware(['auth', 'verified', 'is_paid_member'])->group(function () {
     Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
 });
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-    
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::get('users/export', [UserManagementController::class, 'export'])->name('users.export');
+    Route::get('reviews', [ReviewManagementController::class, 'index'])->name('reviews.index');
+    Route::patch('reviews/{review}/toggle-publish', [ReviewManagementController::class, 'togglePublish'])->name('reviews.togglePublish');
+    Route::resource('admins', AdminManagementController::class)->except(['show']);
 });
 
 require __DIR__.'/auth.php';

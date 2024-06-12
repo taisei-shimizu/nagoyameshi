@@ -36,6 +36,9 @@ class ShopController extends Controller
             }
         }
         $shops = $query->paginate(15);
+        foreach ($shops as $shop) {
+            $shop->average_rating = $shop->reviews()->where('is_published', true)->avg('score');
+        }
         $categories = Category::all();
         $breadcrumbs = [
             ['url' => route('shops.index'), 'label' => '名古屋飯店一覧'],
@@ -77,10 +80,11 @@ class ShopController extends Controller
             ['url' => route('shops.index'), 'label' => '名古屋飯店一覧'],
             ['url' => route('shops.show', $shop->id), 'label' => $shop->name],
         ];
-        $reviews = $shop->reviews;
+        $reviews = $shop->reviews()->where('is_published', true)->get();
+
         $timeSlots = TimeSlotHelper::getTimeSlots($shop);
         // 平均評価を計算
-        $averageRating = $shop->reviews()->avg('score');
+        $averageRating = $shop->reviews()->where('is_published', true)->avg('score');
         return view('shops.show', compact('shop', 'breadcrumbs', 'reviews', 'timeSlots', 'averageRating'));
     }
 

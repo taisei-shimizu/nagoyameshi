@@ -4,7 +4,11 @@
             @guest
                 <h1><a href="{{ url('/') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
             @else
-                <h1><a href="{{ url('/shops') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
+                @if (Auth::user()->role === 'admin')
+                    <h1><a href="{{ route('admin.dashboard') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
+                @else
+                    <h1><a href="{{ url('/shops') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
+                @endif
             @endguest
             <nav>
                 @guest
@@ -14,7 +18,9 @@
                         <a href="{{ route('company') }}" class="btn btn-primary">運営会社情報</a>
                     @endif
                 @else
-                    <a href="{{ route('mypage') }}" class="btn btn-primary">マイページ</a>
+                    @if (Auth::user()->role !== 'admin')
+                        <a href="{{ route('mypage') }}" class="btn btn-primary">マイページ</a>
+                    @endif
                     <a href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                         class="btn btn-primary">ログアウト</a>
