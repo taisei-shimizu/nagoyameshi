@@ -39,7 +39,7 @@
                     <td>{{ $admin->email }}</td>
                     <td>
                         <a href="{{ route('admin.admins.edit', $admin) }}" class="btn btn-sm btn-warning">編集</a>
-                        <form action="{{ route('admin.admins.destroy', $admin) }}" method="POST" class="d-inline">
+                        <form action="{{ route('admin.admins.destroy', $admin) }}" method="POST" class="d-inline" onsubmit="return confirm('本当に削除しますか？')";>
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">削除</button>
@@ -50,6 +50,8 @@
         </tbody>
     </table>
 
-    {{ $admins->links() }}
+    <div class="d-flex justify-content-center">
+        {{ $admins->appends(request()->query())->links() }}
+    </div>
 </div>
 @endsection

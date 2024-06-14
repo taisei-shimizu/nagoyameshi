@@ -12,6 +12,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\ReviewManagementController;
 use App\Http\Controllers\AdminManagementController;
+use App\Http\Controllers\CategoryManagementController;
+use App\Http\Controllers\ShopManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +69,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('reviews', [ReviewManagementController::class, 'index'])->name('reviews.index');
     Route::patch('reviews/{review}/toggle-publish', [ReviewManagementController::class, 'togglePublish'])->name('reviews.togglePublish');
     Route::resource('admins', AdminManagementController::class)->except(['show']);
+    Route::resource('categories', CategoryManagementController::class)->except(['show']);
+    Route::resource('shops', ShopManagementController::class)->except(['show']);
+    Route::get('admin/shops/export', [ShopManagementController::class, 'export'])->name('shops.export');
+    Route::post('admin/shops/import', [ShopManagementController::class, 'import'])->name('shops.import');
 });
 
 require __DIR__.'/auth.php';

@@ -22,14 +22,14 @@
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <a href="#" class="btn btn-primary w-100">店舗管理</a>
+                    <a href="{{ route('admin.shops.index') }}" class="btn btn-primary w-100">店舗管理</a>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="card">
                 <div class="card-body">
-                    <a href="#" class="btn btn-primary w-100">カテゴリ管理</a>
+                    <a href="{{ route('admin.categories.index') }}" class="btn btn-primary w-100">カテゴリ管理</a>
                 </div>
             </div>
         </div>
