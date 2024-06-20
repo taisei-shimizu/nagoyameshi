@@ -11,6 +11,16 @@
     @endcomponent
 
     <h1>会員管理</h1>
+    @if (session('message'))
+        <div class="alert alert-success">
+            {{ session('message') }}
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
     <form method="GET" action="{{ route('admin.users.index') }}" class="mb-4">
         <div class="row">
@@ -43,6 +53,7 @@
                 <th>会員種別</th>
                 <th>メールアドレス</th>
                 <th>登録日</th>
+                <th>処理</th>
             </tr>
         </thead>
         <tbody>
@@ -53,6 +64,13 @@
                     <td>{{ $user->member_type === 'paid' ? '有料会員' : '無料会員' }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->created_at->format('Y-m-d') }}</td>
+                    <td>
+                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('本当に退会させますか？')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger">退会</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

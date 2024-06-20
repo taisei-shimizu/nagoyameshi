@@ -47,12 +47,37 @@
             <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
         </div>
 
-        <div class="mb-3">
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">更新</button>
+        </div>
+    </form>
+
+    <!-- 区切り線 -->
+    <hr class="my-5">
+
+    <h2>会員種別</h2>
+    <div class="mb-3">
             <label for="member_type" class="form-label">会員種別</label>
             <input type="text" class="form-control" id="member_type" name="member_type" value="{{ $user->member_type === 'paid' ? '有料会員' : '無料会員' }}" disabled>
+    </div>
+    @if ($user->member_type === 'paid')
+        <div class="form-group mt-3">
+            <form action="{{ route('payment.cancel') }}" method="POST" onsubmit="return confirm('本当に解約しますか？')">
+                @csrf
+                <button type="submit" class="btn btn-danger">有料プラン解約</button>
+            </form>
         </div>
+    @endif
 
-        <button type="submit" class="btn btn-primary">更新</button>
+    <!-- 区切り線 -->
+    <hr class="my-5">
+
+    <h2>退会</h2>
+    <form action="{{ route('users.destroy') }}" method="POST" class="mt-3">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger" onclick="return confirm('本当に退会しますか？')">退会する</button>
     </form>
+
 </div>
 @endsection

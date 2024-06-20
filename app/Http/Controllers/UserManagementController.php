@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class UserManagementController extends Controller
 {
@@ -70,4 +72,27 @@ class UserManagementController extends Controller
             'Content-Disposition' => 'attachment; filename="users.csv"',
         ]);
     }
+
+        // 退会処理
+        public function destroy(User $user)
+        {
+            DB::beginTransaction();
+            try {
+                // 有料会員の場合、サブスクリプションをキャンセル
+                if ($user->member_type == 'paid') {
+                    if($user->subscribed('default')) {
+                        $user->subscription('default')->cancelNow();
+                    }
+                    $user->member_type = 'free';
+                    $user->save();
+                }
+                // ユーザーを削除
+                $user->delete();
+                DB::commit();
+                return redirect()->route('admin.users.index')->with('message', 'ユーザーを退会させました。');
+            } catch (Exception $e) {
+                DB::rollBack();
+                return redirect()->back()->with('error', '退会処理に失敗しました。');
+            }
+        }
 }

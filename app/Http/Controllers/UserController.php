@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class UserController extends Controller
 {
@@ -110,5 +112,39 @@ class UserController extends Controller
         ];
         $reservations = $user->reservations;
         return view('users.reservations', compact('pastReservations', 'futureReservations', 'breadcrumbs'));
+    }
+    // 退会処理
+    public function destroy(Request $request)
+    {
+        $user = Auth::user();
+
+        DB::beginTransaction();
+
+        try {
+            // 有料会員の場合、サブスクリプションをキャンセル
+            if ($user->member_type == 'paid') {
+                if($user->subscribed('default')) {
+                    $user->subscription('default')->cancelNow();
+                }
+                $user->member_type = 'free';
+                $user->save();
+            }
+            // ユーザーを削除
+            $user->delete();
+
+            DB::commit();
+
+            // リダイレクトとメッセージを設定
+            $redirect = redirect('/')->with('message', '退会しました。');
+
+            Auth::logout();
+
+            return $redirect;
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with('error', '退会処理に失敗しました。');
+        }
     }
 }
