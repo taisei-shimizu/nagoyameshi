@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class AdminSeeder extends Seeder
 {
@@ -16,6 +17,8 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('users')->where('email', 'admin@admin.com')->delete();
+
         User::create([
             'name' => 'Admin',
             'email' => 'admin@admin.com',
