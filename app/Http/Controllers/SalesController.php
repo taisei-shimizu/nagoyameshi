@@ -19,13 +19,15 @@ class SalesController extends Controller
         $perPage = 10; // 1ページあたりの件数
 
         // サブスクリプションの最初の登録日を取得
+        /*
         $firstChargeQuery = Charge::all(['limit' => 1]);
         $firstCharge = collect($firstChargeQuery->data)->sortBy('created')->first();
         $firstChargeDate = $firstCharge ? Carbon::createFromTimestamp($firstCharge->created)->toDateString() : Carbon::now()->toDateString();
+        */
 
         // デフォルトの日付範囲を設定
         if (!$startDate) {
-            $startDate = $firstChargeDate; // 最初の日
+            $startDate = '2024-05-01'; // 最初の日
         }
         if (!$endDate) {
             $endDate = Carbon::now()->toDateString(); // 現在の日
