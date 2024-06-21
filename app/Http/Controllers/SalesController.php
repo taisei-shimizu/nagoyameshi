@@ -32,7 +32,6 @@ class SalesController extends Controller
         if (!$endDate) {
             $endDate = Carbon::now()->toDateString(); // 現在の日
         }
-        dd($startDate,$endDate);
 
         // 全ての売上を取得（ページングなし）
         $charges = collect();
