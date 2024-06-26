@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Category;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Shop>
@@ -18,21 +19,24 @@ class ShopFactory extends Factory
     {
         // カテゴリIDと対応する画像ファイル
         $categoryImages = [
-            1 => 'miso-katsu.jpg',
-            2 => 'tebasaki.jpg',
-            3 => 'hitsumabushi.jpg',
-            4 => 'kishimen.jpg',
-            5 => 'taiwan-ramen.jpg',
-            6 => 'ankake-spaghetti.jpg',
-            7 => 'ebi-fry.jpg'
+            '味噌カツ' => 'miso-katsu.jpg',
+            '手羽先' => 'tebasaki.jpg',
+            'ひつまぶし' => 'hitsumabushi.jpg',
+            'きしめん' => 'kishimen.jpg',
+            '台湾ラーメン' => 'taiwan-ramen.jpg',
+            'あんかけスパゲッティ' => 'ankake-spaghetti.jpg',
+            'エビフライ' => 'ebi-fry.jpg'
         ];
 
-        $categoryId = $this->faker->numberBetween(1, 7);
+        // 有効なカテゴリIDをランダムに取得
+        $category = Category::whereNull('deleted_at')->inRandomOrder()->first();
+        $categoryId = $category->id;
+        $categoryName = $category->name;
 
         return [
             'name' => $this->faker->company,
             'description' => $this->faker->realText(50,5),
-            'image' => 'images/' . $categoryImages[$categoryId],
+            'image' => 'images/' . $categoryImages[$categoryName],
             'category_id' => $categoryId,
             'budget_lower' => $this->faker->numberBetween(500, 1000),
             'budget_upper' => $this->faker->numberBetween(2000, 5000),

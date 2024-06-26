@@ -87,8 +87,8 @@ class ShopTest extends TestCase
         $category = Category::first();
 
         $response = $this->actingAs($admin)->post(route('admin.shops.store'), [
-            'name' => 'TestShop',
-            'description' => 'TestDescription',
+            'name' => '新規店舗',
+            'description' => '説明文',
             'category_id' => $category->id,
             'budget_lower' => 1000,
             'budget_upper' => 5000,
@@ -96,14 +96,14 @@ class ShopTest extends TestCase
             'closing_time' => '21:00',
             'closed_day' => '日曜日',
             'postal_code' => '123-4567',
-            'address' => 'TestAddress',
+            'address' => '新規住所',
             'phone' => '090-1234-5678',
             'image' => UploadedFile::fake()->image('shop.jpg'),
         ]);
 
         $response->assertStatus(302);
         $response->assertRedirect(route('admin.shops.index'));
-        $this->assertDatabaseHas('shops', ['name' => 'TestShop']);
+        $this->assertDatabaseHas('shops', ['name' => '新規店舗']);
     }
 
     /**
@@ -138,8 +138,8 @@ class ShopTest extends TestCase
         $shop = Shop::factory()->create(['category_id' => $category->id]);
 
         $updateData = [
-            'name' => 'UpdatedShop',
-            'description' => 'UpdatedDescription',
+            'name' => '編集店舗',
+            'description' => '編集説明文',
             'category_id' => $category->id,
             'budget_lower' => 1500,
             'budget_upper' => 6000,
@@ -147,7 +147,7 @@ class ShopTest extends TestCase
             'closing_time' => '19:00',
             'closed_day' => '月曜日',
             'postal_code' => '765-4321',
-            'address' => 'UpdatedAddress',
+            'address' => '編集住所',
             'phone' => '080-8765-4321',
             'image' => UploadedFile::fake()->image('updated_shop.jpg')
         ];
@@ -156,7 +156,7 @@ class ShopTest extends TestCase
 
         $response->assertRedirect(route('admin.shops.index'));
         $response->assertSessionHas('message', '店舗情報を更新しました。');
-        $this->assertDatabaseHas('shops', ['name' => 'UpdatedShop']);
+        $this->assertDatabaseHas('shops', ['name' => '編集店舗']);
     }
 
     /**

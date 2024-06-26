@@ -17,14 +17,19 @@ class ReservationController extends Controller
         $request->validate([
             'reservation_date' => ['required', 'date', 'after_or_equal:today'],
             'reservation_time' => ['required', 'date_format:H:i', Rule::in(TimeSlotHelper::getTimeSlots($shop))], 
-            'number_of_people' => ['required', 'integer'],
+            'number_of_people' => ['required', 'integer', 'min:1'],
+        ],
+        [
+            'reservation_date.after_or_equal' => '過去の日時は選択できません。',
+            'reservation_time.in' => '営業時間外の予約はできません。',
+            'number_of_people.min' => '人数は1人以上で指定してください。'
         ]);
 
         // 予約日時が過去の日時かどうかをチェック
         $reservationDateTime = Carbon::parse($request->reservation_date . ' ' . $request->reservation_time, 'Asia/Tokyo');
 
         if ($reservationDateTime->lessThan(Carbon::now('Asia/Tokyo'))) {
-            return redirect()->back()->with('error', '過去の日時は選択できません。')->withInput();
+            return redirect()->back()->withErrors(['reservation_date' => '過去の日時は選択できません。'])->withInput();
         }
 
         // 人数が1人以上かどうかをチェック
@@ -40,11 +45,11 @@ class ReservationController extends Controller
         // 日付をまたぐ場合の営業時間チェック
         if ($closing_time < $opening_time) {
             if (!($reservation_time >= $opening_time || $reservation_time <= $closing_time)) {
-                return redirect()->back()->with('error', '営業時間外の予約はできません。');
+                return redirect()->back()->withErrors(['reservation_time' => '営業時間外の予約はできません。']);
             }
         } else {
             if ($reservation_time < $opening_time || $reservation_time > $closing_time) {
-                return redirect()->back()->with('error', '営業時間外の予約はできません。');
+                return redirect()->back()->withErrors(['reservation_time' => '営業時間外の予約はできません。']);
             }
         }
 
