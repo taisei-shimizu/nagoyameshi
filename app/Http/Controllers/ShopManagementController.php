@@ -230,4 +230,22 @@ class ShopManagementController extends Controller
 
         return redirect()->route('admin.shops.index')->with('message', 'CSVファイルからのインポートが完了しました。');
     }
+
+    //インポート用のテンプレートダウンロード
+    public function downloadTemplate()
+    {
+        $csvContent = "店舗名,カテゴリ名,説明,予算（下限）,予算（上限）,営業時間（開始）,営業時間（終了）,定休日,郵便番号,住所,電話番号,登録日\n";
+        $csvContent .= "サンプル店舗1,味噌カツ,店舗1の説明,1000,3000,09:00,18:00,日曜日,123-4567,東京都日本,012-345-6789,2023-01-01\n";
+        $csvContent .= "サンプル店舗2,手羽先,店舗2の説明,2000,4000,10:00,19:00,土曜日,234-5678,大阪府日本,987-654-3210,2023-01-02\n";
+
+        $fileName = "shop_template.csv";
+
+        $response = Response::make($csvContent, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ]);
+
+        return $response;
+    }
+
 }

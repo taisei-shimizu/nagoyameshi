@@ -47,6 +47,7 @@
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#uploadModal">
                 CSVインポート
             </button>
+            <a href="{{ route('admin.shops.template') }}" class="btn btn-info me-2">CSVインポート用ファイルダウンロード</a>
             <a href="{{ route('admin.shops.export') }}?{{ http_build_query(request()->query()) }}" class="btn btn-secondary">CSVエクスポート</a>
         </div>
     </form>

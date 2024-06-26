@@ -86,6 +86,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('shops', ShopManagementController::class)->except(['show']);
     Route::get('shops/export', [ShopManagementController::class, 'export'])->name('shops.export');
     Route::post('shops/import', [ShopManagementController::class, 'import'])->name('shops.import');
+    Route::get('shops/template', [ShopManagementController::class, 'downloadTemplate'])->name('shops.template');
     Route::get('company/edit', [CompanyManagementController::class, 'edit'])->name('company.edit');
     Route::post('company/update', [CompanyManagementController::class, 'update'])->name('company.update');
     Route::get('sales', [SalesController::class, 'index'])->name('sales.index');
