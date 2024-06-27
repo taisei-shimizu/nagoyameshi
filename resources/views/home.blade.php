@@ -12,7 +12,7 @@
     <!-- KVセクション -->
     <div class="kv">
         <div>
-            <h1 class="display-4">名古屋の美味しいB級グルメが集結！</h1>
+            <h1 class="display-4">名古屋の美味しいB級グルメが集結</h1>
         </div>
         <div id="shopCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-inner">
@@ -31,8 +31,18 @@
                 @endforeach
             </div>
         </div>
+        <div class="register-btn">
+            <a href="{{ route('register') }}" class="btn btn-lg">無料会員登録して始める</a>
+        </div>
     </div>
-    
+
+    <!-- NAGOYAMESHIとはセクション -->
+    <section id="about" class="about-section text-center">
+        <div class="container">
+            <h2 class="mb-5">NAGOYAMESHIとは</h2>
+            <p class="lead">NAGOYAMESHIは、名古屋のB級グルメに特化したレビューアプリです。<br>豊富な店舗情報とユーザーレビューを活用して簡単にお気に入りのお店が検索できます。<br>予約機能により予約もアプリで簡単にできます。</p>
+        </div>
+    </section>
 
     <!-- 特徴セクション -->
     <section id="features" class="py-5">
@@ -68,7 +78,7 @@
                         <img src="{{ asset('images/customer01.svg') }}" class="testimonial-img" alt="山田 太郎">
                         <blockquote class="blockquote">
                             <p class="mb-0">このアプリで名古屋の美味しいお店をたくさん見つけました！</p>
-                            <footer class="blockquote-footer">山田 太郎</footer>
+                            <p class="blockquote-footer">山田 太郎</p>
                         </blockquote>
                     </div>
                 </div>
@@ -77,7 +87,7 @@
                         <img src="{{ asset('images/customer02.svg') }}" class="testimonial-img" alt="鈴木 花子">
                         <blockquote class="blockquote">
                             <p class="mb-0">レビュー機能が便利で、お店選びに役立ちます。</p>
-                            <footer class="blockquote-footer">鈴木 花子</footer>
+                            <p class="blockquote-footer">鈴木 花子</p>
                         </blockquote>
                     </div>
                 </div>
@@ -86,7 +96,7 @@
                         <img src="{{ asset('images/customer03.svg') }}" class="testimonial-img" alt="佐藤 次郎">
                         <blockquote class="blockquote">
                             <p class="mb-0">検索機能で近くの美味しいお店がすぐ見つかります。</p>
-                            <footer class="blockquote-footer">佐藤 次郎</footer>
+                            <p class="blockquote-footer">佐藤 次郎</p>
                         </blockquote>
                     </div>
                 </div>

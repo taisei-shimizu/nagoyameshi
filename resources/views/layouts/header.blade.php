@@ -1,8 +1,8 @@
-<header class="bg-dark text-white p-3">
+<header class="p-3">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
             @guest
-                <h1><a href="{{ url('/') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
+                <h1><a href="{{ url('/') }}" class="text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
             @else
                 @if (Auth::user()->role === 'admin')
                     <h1><a href="{{ route('admin.dashboard') }}" class="text-white text-decoration-none">{{ config('app.name', 'Laravel') }}</a></h1>
