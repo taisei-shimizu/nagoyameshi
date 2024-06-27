@@ -12,6 +12,7 @@
 
     <form action="{{ route('admin.company.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        @method('PATCH')
         <div class="mb-3">
             <label for="name" class="form-label">会社名</label>
             <input type="text" name="name" class="form-control" value="{{ old('name', $company->name ?? '') }}" required>

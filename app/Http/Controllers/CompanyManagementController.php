@@ -42,13 +42,8 @@ class CompanyManagementController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $oldImage = $company->image;
             $imagePath = $request->file('image')->store('', 'images');
-            $company->image = $imagePath;
-            //dd($oldImage, $imagePath);
-            if ($oldImage && Storage::disk('public')->exists($oldImage)) {
-                Storage::disk('public')->delete($oldImage);
-            }
+            $company->image = 'images/'.$imagePath;
         }
 
         $company->save();
