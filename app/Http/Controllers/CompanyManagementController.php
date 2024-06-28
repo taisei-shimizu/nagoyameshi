@@ -6,6 +6,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\UpdateCompanyRequest;
 
 class CompanyManagementController extends Controller
 {
@@ -21,7 +22,7 @@ class CompanyManagementController extends Controller
         return view('admin.company.edit', compact('company'));
     }
 
-    public function update(Request $request)
+    public function update(UpdateCompanyRequest $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
