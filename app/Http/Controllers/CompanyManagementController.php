@@ -24,16 +24,6 @@ class CompanyManagementController extends Controller
 
     public function update(UpdateCompanyRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'postal_code' => 'required|string|max:10',
-            'address' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'url' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
         $company = Company::first();
 
         if ($company) {
