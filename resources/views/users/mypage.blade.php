@@ -18,8 +18,8 @@
     <!-- パンくずリスト -->
     @component('components.breadcrumbs')
         @slot('breadcrumbs', [
+            ['url' => url('/shops'), 'label' => 'トップ'], 
             ['url' => route('mypage'), 'label' => 'マイページ'],
-            ['url' => route('mypage.edit'), 'label' => '会員情報編集']
         ])
     @endcomponent
 

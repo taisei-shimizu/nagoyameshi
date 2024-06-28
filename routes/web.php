@@ -29,7 +29,7 @@ use App\Http\Controllers\SalesController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('guest');;
 Route::get('/company', [CompanyManagementController::class, 'show'])->name('company');
 
 

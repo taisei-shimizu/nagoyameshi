@@ -19,7 +19,10 @@
                     @endif
                 @else
                     @if (Auth::user()->role !== 'admin')
-                        <a href="{{ route('mypage') }}" class="btn btn-primary">マイページ</a>
+                        @if (Route::currentRouteName() == 'home')
+                            <a href="{{ route('shops.index') }}" class="btn btn-primary">店舗一覧</a>
+                        @endif
+                            <a href="{{ route('mypage') }}" class="btn btn-primary">マイページ</a>
                     @endif
                     <a href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();"

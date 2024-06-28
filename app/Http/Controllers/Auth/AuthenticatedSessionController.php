@@ -34,7 +34,10 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // 一般ユーザーの場合はショップ一覧へリダイレクト
+        return redirect()->intended(route('shops.index'));
+
+        //return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**

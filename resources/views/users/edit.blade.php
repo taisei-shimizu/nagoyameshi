@@ -4,6 +4,10 @@
 <div class="container my-5">
     <!-- パンくずリスト -->
     @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
+        @slot('breadcrumbs', [
+            ['url' => route('mypage'), 'label' => 'マイページ'],
+            ['url' => route('mypage.edit'), 'label' => '会員情報編集']
+        ])
     @endcomponent
 
     <h1>会員情報編集</h1>
@@ -49,6 +53,7 @@
 
         <div class="form-group mt-3">
             <button type="submit" class="btn btn-primary">更新</button>
+            <a href="{{ route('mypage') }}" class="btn btn-secondary">戻る</a>
         </div>
     </form>
 

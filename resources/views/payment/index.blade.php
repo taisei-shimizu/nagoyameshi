@@ -52,6 +52,7 @@
             <div id="card-cvc-element" class="form-control"></div>
         </div>
         <button type="submit" class="btn btn-primary" id="card-button" data-secret="{{ $user->createSetupIntent()->client_secret }}">登録</button>
+        <a href="{{ route('mypage') }}" class="btn btn-secondary">戻る</a>
     </form>
 </div>
 <!-- ローディング画面 -->
