@@ -8,12 +8,15 @@
             {{ session('message') }}
         </div>
     @endif
-
-    @if (session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <!-- パンくずリスト -->
     @component('components.breadcrumbs', ['breadcrumbs' => $breadcrumbs])
     @endcomponent
@@ -109,7 +112,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="number_of_people" class="form-label">人数</label>
-                                    <input type="number" class="form-control @error('number_of_people') is-invalid @enderror" id="number_of_people" name="number_of_people" value="{{ old('number_of_people') }}" required>
+                                    <input type="number" class="form-control @error('number_of_people') is-invalid @enderror" id="number_of_people" name="number_of_people" value="{{ old('number_of_people') }}" min="1" required>
                                     @error('number_of_people')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -257,9 +260,15 @@
         // 今日より前の日付を選択できないようにする
         var today = new Date().toISOString().split('T')[0];
         document.getElementById('reservation_date').setAttribute('min', today);
+        // エラーの場合はモーダルを再表示
+        @if ($errors->any())
+            var reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
+            reservationModal.show();
+        @endif
     });
 
     // 30分刻みで予約時間を選択できるようにする
     document.getElementById('reservation_time').setAttribute('step', 1800);
+
 </script>
 @endsection
