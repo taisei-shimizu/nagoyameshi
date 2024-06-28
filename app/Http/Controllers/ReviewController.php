@@ -6,10 +6,12 @@ use App\Models\Review;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreReviewRequest;
+use App\Http\Requests\UpdateReviewRequest;
 
 class ReviewController extends Controller
 {
-    public function store(Request $request, Shop $shop)
+    public function store(StoreReviewRequest $request, Shop $shop)
     {
         $request->validate([
             'score' => ['required', 'integer', 'between:1,5'],
@@ -28,7 +30,7 @@ class ReviewController extends Controller
         return redirect()->route('shops.show', $shop)->with('message', 'レビューを投稿しました。');
     }
 
-    public function update(Request $request, Review $review)
+    public function update(UpdateReviewRequest $request, Review $review)
     {
         if (Auth::id() !== $review->user_id) {
             return redirect()->back()->with('error', '編集する権限がありません。');
