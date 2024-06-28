@@ -16,10 +16,13 @@
         </div>
     @endif
     @if (session('error'))
-        <div class="alert alert-danger">
+        <div id="error-message" class="alert alert-danger">
             {{ session('error') }}
         </div>
+    @else
+        <div id="error-message" class="alert alert-danger d-none"></div>
     @endif
+
 
     <div class="plan-info mb-4 p-3 bg-light rounded">
         <h2 class="h5 mb-3">有料プランについて</h2>
@@ -110,8 +113,10 @@
 
                 if (error) {
                     console.error(error);
-                    document.querySelector('.alert-danger').textContent = error.message;
-                    document.querySelector('.alert-danger').classList.remove('d-none');
+                    const errorMessage = document.getElementById('error-message');
+                    errorMessage.textContent = error.message;
+                    errorMessage.classList.remove('d-none');
+                    hideLoader();
                 } else {
                     const hiddenInput = document.createElement('input');
                     hiddenInput.setAttribute('type', 'hidden');
