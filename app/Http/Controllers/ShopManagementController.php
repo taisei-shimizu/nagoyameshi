@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Goodby\CSV\Import\Standard\LexerConfig;
 use Goodby\CSV\Import\Standard\Lexer;
 use Goodby\CSV\Import\Standard\Interpreter;
-
+use App\Http\Requests\StoreShopRequest;
+use App\Http\Requests\UpdateShopRequest;
 
 class ShopManagementController extends Controller
 {
@@ -40,23 +41,8 @@ class ShopManagementController extends Controller
         return view('admin.shops.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreShopRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'budget_lower' => 'required|integer',
-            'budget_upper' => 'required|integer',
-            'opening_time' => 'required',
-            'closing_time' => 'required',
-            'closed_day' => 'required|string',
-            'postal_code' => 'required|string|max:10',
-            'address' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
         $shop = new Shop($request->all());
 
         if ($request->hasFile('image')) {
@@ -75,23 +61,8 @@ class ShopManagementController extends Controller
         return view('admin.shops.edit', compact('shop', 'categories'));
     }
 
-    public function update(Request $request, Shop $shop)
+    public function update(UpdateShopRequest $request, Shop $shop)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'budget_lower' => 'required|integer',
-            'budget_upper' => 'required|integer',
-            'opening_time' => 'required',
-            'closing_time' => 'required',
-            'closed_day' => 'required|string',
-            'postal_code' => 'required|string|max:10',
-            'address' => 'required|string',
-            'phone' => 'required|string|max:20',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
         // 古い画像のパスを取得
         $oldImage = $shop->image;
 
