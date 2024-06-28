@@ -16,4 +16,10 @@ class Category extends Model
     {
         return $this->hasMany(Shop::class);
     }
+
+    // スコープの定義
+    public function scopeByName($query, $name)
+    {
+        return $query->where('name', 'like', '%' . $name . '%');
+    }
 }

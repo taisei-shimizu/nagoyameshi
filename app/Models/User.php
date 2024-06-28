@@ -63,4 +63,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Reservation::class);
     }
 
+    // スコープの定義
+    public function scopeNonAdmin($query)
+    {
+        return $query->where('role', '!=', 'admin');
+    }
+
+    public function scopeByEmail($query, $email)
+    {
+        return $query->where('email', 'like', '%' . $email . '%');
+    }
+
+    public function scopeByMemberType($query, $memberType)
+    {
+        return $query->where('member_type', $memberType);
+    }
+
 }

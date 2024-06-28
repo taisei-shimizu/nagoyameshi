@@ -12,7 +12,7 @@ class CategoryManagementController extends Controller
         $query = Category::query();
 
         if ($request->filled('category_name')) {
-            $query->where('name', 'like', '%' . $request->input('category_name') . '%');
+            $query->byName($request->input('category_name'));
         }
 
         $total = $query->count(); // 総件数の取得

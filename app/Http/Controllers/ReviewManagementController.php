@@ -12,19 +12,15 @@ class ReviewManagementController extends Controller
         $query = Review::query();
 
         if ($request->filled('shop_name')) {
-            $query->whereHas('shop', function ($query) use ($request) {
-                $query->where('name', 'like', '%' . $request->input('shop_name') . '%');
-            });
+            $query->byShopName($request->input('shop_name'));
         }
 
         if ($request->filled('user_email')) {
-            $query->whereHas('user', function ($query) use ($request) {
-                $query->where('email', 'like', '%' . $request->input('user_email') . '%');
-            });
+            $query->byUserEmail($request->input('user_email'));
         }
 
         if ($request->filled('is_published')) {
-            $query->where('is_published', $request->input('is_published'));
+            $query->published($request->input('is_published'));
         }
 
         $total = $query->count(); // 総件数の取得

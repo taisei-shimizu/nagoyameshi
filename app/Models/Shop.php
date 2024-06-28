@@ -45,4 +45,15 @@ class Shop extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+    // スコープの定義
+    public function scopeByName($query, $name)
+    {
+        return $query->where('name', 'like', '%' . $name . '%');
+    }
+
+    public function scopeByCategoryId($query, $categoryId)
+    {
+        return $query->where('category_id', $categoryId);
+    }
 }

@@ -19,12 +19,12 @@ class ShopController extends Controller
         $query = Shop::query();
         // 店名での検索
         if ($request->filled('name')) {
-            $query->where('name', 'like', '%' . $request->input('name') . '%');
+            $query->byName($request->input('name'));
         }
 
         // カテゴリでの検索
         if ($request->filled('category_id')) {
-            $query->where('category_id', $request->input('category_id'));
+            $query->byCategoryId($request->input('category_id'));
         }
 
         // 価格順での並び替え

@@ -20,11 +20,11 @@ class ShopManagementController extends Controller
         $query = Shop::with('category'); // カテゴリ情報を取得
 
         if ($request->filled('name')) {
-            $query->where('name', 'like', '%' . $request->input('name') . '%');
+            $query->byName($request->input('name'));
         }
 
         if ($request->filled('category_id')) {
-            $query->where('category_id', $request->input('category_id'));
+            $query->byCategoryId($request->input('category_id'));
         }
 
         $total = $query->count(); // 総件数の取得
@@ -122,11 +122,11 @@ class ShopManagementController extends Controller
     {
         $query = Shop::query()->with('category');;
         if ($request->filled('name')) {
-            $query->where('name', 'like', '%' . $request->input('name') . '%');
+            $query->byName($request->input('name'));
         }
 
         if ($request->filled('category_id')) {
-            $query->where('category_id', $request->input('category_id'));
+            $query->byCategoryId($request->input('category_id'));
         }
 
         $shops = $query->get();

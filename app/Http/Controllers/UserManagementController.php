@@ -13,14 +13,14 @@ class UserManagementController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::where('role', '!=', 'admin');
+        $query = User::nonAdmin();
 
         if ($request->filled('email')) {
-            $query->where('email', 'like', '%' . $request->input('email') . '%');
+            $query->byEmail($request->input('email'));
         }
 
         if ($request->filled('member_type')) {
-            $query->where('member_type', $request->input('member_type'));
+            $query->byMemberType($request->input('member_type'));
         }
         $total = $query->count();
 
@@ -31,7 +31,7 @@ class UserManagementController extends Controller
 
     public function export(Request $request)
     {
-        $query = User::where('role', '!=', 'admin'); // 管理者を除外
+        $query = User::nonAdmin();
 
         if ($request->filled('email')) {
             $query->where('email', 'like', '%' . $request->input('email') . '%');
