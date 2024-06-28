@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAdminRequest;
+use App\Http\Requests\UpdateAdminRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,14 +22,8 @@ class AdminManagementController extends Controller
         return view('admin.admins.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreAdminRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -43,20 +39,8 @@ class AdminManagementController extends Controller
         return view('admin.admins.edit', compact('admin'));
     }
 
-    public function update(Request $request, User $admin)
+    public function update(UpdateAdminRequest $request, User $admin)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('users')->ignore($admin->id),
-            ],
-            'password' => 'nullable|string|min:8|confirmed',
-        ]);
-
         $admin->name = $request->name;
         $admin->email = $request->email;
         if ($request->filled('password')) {
