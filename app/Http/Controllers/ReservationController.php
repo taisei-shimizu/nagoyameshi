@@ -9,22 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Http\Requests\StoreReservationRequest;  
 
 class ReservationController extends Controller
 {
-    public function store(Request $request, Shop $shop)
+    public function store(StoreReservationRequest $request, Shop $shop)
     {
-        $request->validate([
-            'reservation_date' => ['required', 'date', 'after_or_equal:today'],
-            'reservation_time' => ['required', 'date_format:H:i', Rule::in(TimeSlotHelper::getTimeSlots($shop))], 
-            'number_of_people' => ['required', 'integer', 'min:1'],
-        ],
-        [
-            'reservation_date.after_or_equal' => '過去の日時は選択できません。',
-            'reservation_time.in' => '営業時間外の予約はできません。',
-            'number_of_people.min' => '人数は1人以上で指定してください。'
-        ]);
-
         // 予約日時が過去の日時かどうかをチェック
         $reservationDateTime = Carbon::parse($request->reservation_date . ' ' . $request->reservation_time, 'Asia/Tokyo');
 
@@ -34,7 +24,7 @@ class ReservationController extends Controller
 
         // 人数が1人以上かどうかをチェック
         if ($request->number_of_people <= 0) {
-            return redirect()->back()->with('error', '1人以上で予約してください。')->withInput();
+            return redirect()->back()->withErrors(['number_of_people' => '1人以上で予約してください。'])->withInput(); 
         }
 
         // 営業時間内かどうかをチェック
@@ -60,7 +50,7 @@ class ReservationController extends Controller
             ->exists();
 
         if ($existing_reservation) {
-            return redirect()->back()->with('error', 'すでに予約が入っています。別の日時を選択してください。');
+            return redirect()->back()->withErrors(['reservation_time' => 'すでに予約が入っています。別の日時を選択してください。'])->withInput();
         }
 
         Reservation::create([
@@ -77,7 +67,7 @@ class ReservationController extends Controller
     public function destroy(Reservation $reservation)
     {
         if (Auth::id() !== $reservation->user_id) {
-            return redirect()->back()->with('error', '削除する権限がありません。');
+            return redirect()->back()->withErrors(['error' => '削除する権限がありません。']);
         }
 
         $reservation->delete();
