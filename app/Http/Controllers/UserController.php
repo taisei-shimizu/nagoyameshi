@@ -10,6 +10,7 @@ use Illuminate\Validation\Rules\Password;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -36,14 +37,8 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.Auth::id()],
-            'password' => ['nullable', 'confirmed', Password::defaults()],
-        ]);
-
         $user = Auth::user();
         $user->name = $request->input('name') ? $request->input('name') : $user->name;
         $user->email = $request->input('email') ? $request->input('email') : $user->email;
