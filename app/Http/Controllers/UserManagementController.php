@@ -24,7 +24,7 @@ class UserManagementController extends Controller
         }
         $total = $query->count();
 
-        $users = $query->paginate(15);
+        $users = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return view('admin.users.index', compact('users', 'total'));
     }

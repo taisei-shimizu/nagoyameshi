@@ -11,7 +11,7 @@ class AdminManagementController extends Controller
 {
     public function index()
     {
-        $admins = User::where('role', 'admin')->paginate(15);
+        $admins = User::where('role', 'admin')->orderBy('created_at', 'desc')->paginate(15);
         return view('admin.admins.index', compact('admins'));
     }
 

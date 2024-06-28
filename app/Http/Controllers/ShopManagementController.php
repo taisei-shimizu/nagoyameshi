@@ -28,7 +28,7 @@ class ShopManagementController extends Controller
         }
 
         $total = $query->count(); // 総件数の取得
-        $shops = $query->paginate(15);
+        $shops = $query->orderBy('created_at', 'desc')->paginate(15);
         $categories = Category::all();
 
         return view('admin.shops.index', compact('shops', 'total', 'categories'));

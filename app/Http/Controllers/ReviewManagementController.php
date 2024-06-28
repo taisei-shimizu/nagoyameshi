@@ -28,8 +28,10 @@ class ReviewManagementController extends Controller
         }
 
         $total = $query->count(); // 総件数の取得
-        $reviews = $query->paginate(15);
         $averageScore = $query->average('score'); // 平均評価の取得
+
+        // レビューを最新順に並べ替える
+        $reviews = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return view('admin.reviews.index', compact('reviews', 'total', 'averageScore'));
     }
