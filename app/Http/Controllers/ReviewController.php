@@ -13,11 +13,6 @@ class ReviewController extends Controller
 {
     public function store(StoreReviewRequest $request, Shop $shop)
     {
-        $request->validate([
-            'score' => ['required', 'integer', 'between:1,5'],
-            'content' => ['required', 'string', 'max:255'],
-        ]);
-
         $review = new Review([
             'score' => $request->score,
             'content' => $request->content,
@@ -35,11 +30,6 @@ class ReviewController extends Controller
         if (Auth::id() !== $review->user_id) {
             return redirect()->back()->with('error', '編集する権限がありません。');
         }
-
-        $request->validate([
-            'score' => ['required', 'integer', 'between:1,5'],
-            'content' => ['required', 'string', 'max:255'],
-        ]);
 
         $review->update([
             'score' => $request->score,
