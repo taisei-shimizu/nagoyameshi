@@ -27,7 +27,7 @@ class FavoriteTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('favorites.store', $shop));
 
-        $response->assertRedirect();
+        $response->assertStatus(200);
         $this->assertDatabaseHas('favorites', [
             'user_id' => $user->id,
             'shop_id' => $shop->id,
@@ -42,7 +42,7 @@ class FavoriteTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('favorites.store', $shop));
 
-        $response->assertRedirect();
+        $response->assertStatus(302);
         $this->assertDatabaseMissing('favorites', [
             'user_id' => $user->id,
             'shop_id' => $shop->id,
@@ -63,7 +63,7 @@ class FavoriteTest extends TestCase
 
         $response = $this->actingAs($user)->delete(route('favorites.destroy', $shop));
 
-        $response->assertRedirect();
+        $response->assertStatus(200);
         $this->assertDatabaseMissing('favorites', [
             'user_id' => $user->id,
             'shop_id' => $shop->id,
@@ -83,7 +83,7 @@ class FavoriteTest extends TestCase
 
         $response = $this->actingAs($user)->delete(route('favorites.destroy', $shop));
 
-        $response->assertRedirect();
+        $response->assertStatus(302);
         $this->assertDatabaseHas('favorites', [
             'user_id' => $user->id,
             'shop_id' => $shop->id,
