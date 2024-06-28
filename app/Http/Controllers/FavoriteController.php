@@ -14,7 +14,7 @@ class FavoriteController extends Controller
         $user = Auth::user();
 
         if ($user->favorites()->where('shop_id', $shop->id)->exists()) {
-            return back()->with('message', 'お気に入り登録済みです。');
+            return response()->json(['message' => 'お気に入り登録済みです。'], 409); 
         }
 
         Favorite::create([
@@ -22,7 +22,7 @@ class FavoriteController extends Controller
             'user_id' => $user->id,
         ]);
 
-        return back();
+        return response()->json(['message' => 'お気に入りに追加しました。']);
     }
 
     public function destroy(Shop $shop)
@@ -32,10 +32,10 @@ class FavoriteController extends Controller
 
         if ($favorite) {
             $favorite->delete();
-            return back();
+            return response()->json(['message' => 'お気に入りを解除しました。']);
         }
 
-        return back()->with('message', 'お気に入り登録がされていません。');
+        return response()->json(['message' => 'お気に入り登録がされていません。'], 404); 
     }
 
 }

@@ -49,20 +49,13 @@
                     @auth
                         @if (Auth::user()->member_type === 'paid')
                             @if (Auth::user()->favorites->contains('shop_id', $shop->id))
-                                <form action="{{ route('favorites.destroy', $shop) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fas fa-heart text-dark"></i> お気に入り解除
-                                    </button>
-                                </form>
+                                <button class="btn btn-danger favorite-button" data-id="{{ $shop->id }}" data-action="unfavorite">
+                                    <i class="fas fa-heart text-dark"></i> お気に入り解除
+                                </button>
                             @else
-                                <form action="{{ route('favorites.store', $shop) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="far fa-heart text-light"></i> お気に入り
-                                    </button>
-                                </form>
+                                <button class="btn btn-primary favorite-button" data-id="{{ $shop->id }}" data-action="favorite">
+                                    <i class="far fa-heart text-light"></i> お気に入り
+                                </button>
                             @endif
                         @endif
                     @endauth
@@ -265,6 +258,42 @@
             var reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
             reservationModal.show();
         @endif
+        // お気に入り登録・解除ボタン
+        const buttons = document.querySelectorAll('.favorite-button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                const shopId = this.getAttribute('data-id');
+                const action = this.getAttribute('data-action');
+                const url = `{{ url('shops') }}/${shopId}/favorite`;
+                const method = action === 'favorite' ? 'POST' : 'DELETE';
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ _token: token })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (action === 'favorite') {
+                        this.setAttribute('data-action', 'unfavorite');
+                        this.classList.remove('btn-primary');
+                        this.classList.add('btn-danger');
+                        this.innerHTML = '<i class="fas fa-heart text-dark"></i> お気に入り解除';
+                    } else {
+                        this.setAttribute('data-action', 'favorite');
+                        this.classList.remove('btn-danger');
+                        this.classList.add('btn-primary');
+                        this.innerHTML = '<i class="far fa-heart text-light"></i> お気に入り';
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
     });
 
     // 30分刻みで予約時間を選択できるようにする

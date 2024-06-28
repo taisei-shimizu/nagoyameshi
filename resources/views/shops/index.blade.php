@@ -55,7 +55,7 @@
         @foreach ($shops as $shop)
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    <a href="{{ route('shops.show', $shop) }}">
+                    <a href="{{ route('shops.show', $shop) }}"  class="card-link">
                         <img src="{{ asset($shop->image) }}" class="card-img-top" alt="{{ $shop->name }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ $shop->name }}</h5>
@@ -78,20 +78,13 @@
                             @auth
                                 @if (Auth::user()->member_type === 'paid')
                                     @if (Auth::user()->favorites->contains('shop_id', $shop->id))
-                                        <form action="{{ route('favorites.destroy', $shop) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">
-                                                <i class="fas fa-heart text-dark"></i> お気に入り解除
-                                            </button>
-                                        </form>
+                                        <button class="btn btn-danger favorite-button" data-id="{{ $shop->id }}" data-action="unfavorite">
+                                            <i class="fas fa-heart text-dark"></i> お気に入り解除
+                                        </button>
                                     @else
-                                        <form action="{{ route('favorites.store', $shop) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="far fa-heart text-light"></i> お気に入り
-                                            </button>
-                                        </form>
+                                        <button class="btn btn-primary favorite-button" data-id="{{ $shop->id }}" data-action="favorite">
+                                            <i class="far fa-heart text-light"></i> お気に入り
+                                        </button>
                                     @endif
                                 @endif
                             @endauth
@@ -106,6 +99,65 @@
         {{ $shops->appends(request()->query())->links() }}
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.favorite-button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                event.stopPropagation(); // イベントの伝播を停止
+                event.preventDefault(); // デフォルトの動作を防ぐ
+                const shopId = this.getAttribute('data-id');
+                const action = this.getAttribute('data-action');
+                const url = `{{ url('shops') }}/${shopId}/favorite`;
+                const method = action === 'favorite' ? 'POST' : 'DELETE';
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch(url, {
+                    method: method,
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ _token: token })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (action === 'favorite') {
+                        this.setAttribute('data-action', 'unfavorite');
+                        this.classList.remove('btn-primary');
+                        this.classList.add('btn-danger');
+                        this.innerHTML = '<i class="fas fa-heart text-dark"></i> お気に入り解除';
+                    } else {
+                        this.setAttribute('data-action', 'favorite');
+                        this.classList.remove('btn-danger');
+                        this.classList.add('btn-primary');
+                        this.innerHTML = '<i class="far fa-heart text-light"></i> お気に入り';
+                    }
+                    showMessage(data.message, 'success');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('操作に失敗しました。', 'danger');
+                });
+            });
+        });
+
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+        }
+    });
+</script>
 @endsection
 
 

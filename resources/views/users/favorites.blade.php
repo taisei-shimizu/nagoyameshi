@@ -32,13 +32,9 @@
                             <h5 class="card-title">{{ $favorite->shop->name }}</h5>
                             <p class="card-text">{{ $favorite->shop->description }}</p>
                             <a href="{{ route('shops.show', $favorite->shop) }}" class="btn btn-primary">詳細を見る</a>
-                            <form action="{{ route('favorites.destroy', $favorite->shop) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    <i class="fas fa-heart text-dark"></i> お気に入り解除
-                                </button>
-                            </form>
+                            <button class="btn btn-danger favorite-remove-button" data-id="{{ $favorite->shop->id }}">
+                                <i class="fas fa-heart text-dark"></i> お気に入り解除
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -46,4 +42,37 @@
         </div>
     @endif
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.favorite-remove-button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                const shopId = this.getAttribute('data-id');
+                const url = `{{ url('shops') }}/${shopId}/favorite`;
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ _token: token })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // お気に入り解除成功時の処理
+                    this.closest('.col-md-4').remove(); // カードを削除
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+    });
+</script>
 @endsection
